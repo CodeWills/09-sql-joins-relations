@@ -36,8 +36,8 @@ app.get('/articles', (request, response) => {
 
 app.post('/articles', (request, response) => {
   client.query(
-    'INSERT INTO authors(author, "authorUrl")VALUES ($1, $2);',
-    [request.body.author, request.body.authorUrl],
+    'INSERT INTO authors(author, "authorUrl")VALUES ($1,$2) ON CONFLICT DO NOTHING;',
+    [request.body.author_id, request.body.authorUrl],
     function(err) {
       if (err) console.error(err);
       // REVIEW: This is our second query, to be executed when this first query is complete.
@@ -47,7 +47,7 @@ app.post('/articles', (request, response) => {
 
   function queryTwo() {
     client.query(
-      `SELECT DISTINCT author_id FROM authors;`,
+      `SELECT DISTINCT author_id FROM authors  where author=$1;`,
       [request.body.author],
       function(err, result) {
         if (err) console.error(err);
