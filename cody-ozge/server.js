@@ -25,7 +25,7 @@ app.get('/new', (request, response) => {
 
 // REVIEW: These are routes for making API calls to enact CRUD operations on our database.
 app.get('/articles', (request, response) => {
-  client.query(`SELECT * FROM articles INNER JOIN authors ON articles.author_id = authors.author_id`)
+  client.query(`SELECT * FROM articles INNER JOIN authors ON articles.article_id = authors.article_id`)
     .then(result => {
       response.send(result.rows);
     })
@@ -47,8 +47,8 @@ app.post('/articles', (request, response) => {
 
   function queryTwo() {
     client.query(
-      ``,
-      [],
+      `SELECT DISTINCT author_id FROM authors;`,
+      [request.body.author],
       function(err, result) {
         if (err) console.error(err);
 
